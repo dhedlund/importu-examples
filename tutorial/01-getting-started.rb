@@ -1,4 +1,9 @@
 #!/usr/bin/env ruby
+#
+# This lesson will show you how to:
+#   1. define very basic CSV, YAML and XML importers
+#   2. walk over records in a data file
+#
 
 require 'importu'
 
@@ -29,34 +34,6 @@ class XmlBookImporter < Importu::Importer::Xml
 end
 
 
-# an importer can also inherit rules from another importer, or mix in a
-# common set of rules used across multiple importers
-class BaseBookImporter < Importu::Importer::Csv
-  fields :title, :author, :isbn10
-end
-
-module BookImporterMixin
-  include Importu::Dsl
-
-  # the DSL methods that define rules need to be evaluated from within
-  # the context of the class using the mix-in; mixing in rules that have
-  # already been evaluated will not apply the rules to the importer
-  include do
-    # if you only have one field, you can use 'field' instead of 'fields'
-    field :release_date
-  end
-end
-
-class SubclassedBookImporter < BaseBookImporter
-  include BookImporterMixin
-
-  field :pages
-end
-
-# the above base class, mix-in and additional subclass rules above are
-# combined to produce an importer equivalent to the BookImporter class
-
-
 
 ##### General Usage #####
 
@@ -77,7 +54,7 @@ importer.records.first[:isbn10] # => "0596516177"
 
 # to access a hash of each record after rules have been applied
 importer.records.map(&:to_hash)
-#  => [{:title=>"The Ruby Programming Language",
+# ==> [{:title=>"The Ruby Programming Language",
 #       :author=>"David Flanagan and Yukihiro Matsumoto",
 #       :isbn10=>"0596516177",
 #       :pages=>"448",
@@ -95,7 +72,7 @@ importer.records.map(&:to_hash)
 
 # to access each record before rules have been applied
 importer.records.map(&:data)
-#  => [{"isbn10"=>"0596516177",
+# ==> [{"isbn10"=>"0596516177",
 #       "title"=>"The Ruby Programming Language",
 #       "author"=>"David Flanagan,Yukihiro Matsumoto",
 #       "release_date"=>"Feb 1, 2008",

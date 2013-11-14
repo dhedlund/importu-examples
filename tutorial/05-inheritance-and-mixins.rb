@@ -4,6 +4,9 @@
 #   1. inherit definitions from a base importer
 #   2. create and mix in definitions
 #
+# TODO:
+#   - overriding :initalize
+#
 
 require 'importu'
 
